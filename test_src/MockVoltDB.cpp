@@ -166,7 +166,7 @@ void MockVoltDB::interrupt() {
 }
 
 void MockVoltDB::run() 
-throw (voltdb::Exception, voltdb::NoConnectionsException, voltdb::LibEventException) {
+ {
     if (event_base_dispatch(m_base) == -1) {
         throw voltdb::LibEventException();
     }

@@ -34,8 +34,8 @@ namespace voltdb {
  */
 class Exception : public std::exception {
 public:
-    virtual ~Exception() throw() {}
-    virtual const char* what() const throw() {
+    virtual ~Exception() noexcept {}
+    virtual const char* what() const noexcept  {
         return "An unknown error occured in the VoltDB client API";
     }
 };
@@ -44,7 +44,7 @@ class NullPointerException : public Exception {
 public:
     NullPointerException() :
         Exception() {}
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept  {
         return "Found a null pointer where an address was expected";
     }
 };
@@ -80,9 +80,9 @@ public:
         m_what = msg;
     }
 
-    virtual ~InvalidColumnException() throw() {}
+    virtual ~InvalidColumnException() noexcept {}
 
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept  {
         return m_what.c_str();
     }
 };
@@ -97,11 +97,11 @@ public:
         m_what = "Failed to create row. " + msg;
     }
 
-    const char* what() const throw() {
+    const char* what() const noexcept  {
         return m_what.c_str();
     }
 
-    ~RowCreationException() throw() {}
+    ~RowCreationException() noexcept {}
 };
 
 class TableException : public Exception {
@@ -113,11 +113,11 @@ public:
 
     explicit TableException(const std::string& msg) : m_what(msg){ }
 
-    const char* what() const throw() {
+    const char* what() const noexcept  {
         return m_what.c_str();
     }
 
-    ~TableException() throw() {}
+    ~TableException() noexcept {}
 };
 /*
  * Thrown by ByteBuffer when an attempt is made to get or put data beyond the limit or capacity of the ByteBuffer
@@ -128,7 +128,7 @@ public:
 class OverflowUnderflowException : public Exception {
 public:
     OverflowUnderflowException() : Exception() {}
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept  {
         return "Overflow underflow exception";
     }
 };
@@ -140,7 +140,7 @@ public:
 class IndexOutOfBoundsException : public Exception {
 public:
     IndexOutOfBoundsException() : Exception() {}
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept  {
         return "Index out of bounds exception";
     }
 };
@@ -152,7 +152,7 @@ public:
 class NonExpandableBufferException : public Exception {
 public:
     NonExpandableBufferException() : Exception() {}
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept  {
         return "Attempted to add/expand a nonexpandable buffer";
     }
 };
@@ -164,7 +164,7 @@ public:
 class UninitializedParamsException : public Exception {
 public:
     UninitializedParamsException() : Exception() {}
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept  {
         return "Not all parameters were set";
     }
 };
@@ -185,8 +185,8 @@ public:
         snprintf(msg, sizeof msg, "Attempted to set a parameter using the wrong type: %s<%ld>", typeName.c_str(), type);
         m_what = msg;
     }
-    virtual ~ParamMismatchException() throw() {}
-    virtual const char* what() const throw() {
+    virtual ~ParamMismatchException() noexcept {}
+    virtual const char* what() const noexcept  {
         return m_what.c_str();
     }
 };
@@ -205,9 +205,9 @@ public:
         m_what = msg;
     }
 
-    virtual ~UnsupportedTypeException() throw() {}
+    virtual ~UnsupportedTypeException() noexcept {}
 
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept  {
         return m_what.c_str();
     }
 
@@ -222,7 +222,7 @@ private:
 class ElasticModeMismatchException : public Exception {
 public:
     ElasticModeMismatchException() : Exception() {}
-   virtual const char* what() const throw() {
+   virtual const char* what() const noexcept  {
        return "LEGACY mode is not supported";
    }
 };
@@ -233,7 +233,7 @@ public:
 class NoMoreRowsException : public Exception {
 public:
     NoMoreRowsException() : Exception() {}
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept  {
         return "Requests another row when there are no more";
     }
 };
@@ -245,7 +245,7 @@ public:
 class StringToDecimalException : public Exception {
 public:
     StringToDecimalException() : Exception() {}
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept  {
         return "Parse error constructing decimal from string";
     }
 };
@@ -268,11 +268,11 @@ public:
         m_what = msg;
     }
 
-    const char* what() const throw() {
+    const char* what() const noexcept  {
         return m_what.c_str();
     }
 
-    virtual ~ConnectException() throw () {}
+    virtual ~ConnectException() noexcept {}
 };
 
 /*
@@ -282,7 +282,7 @@ public:
 class NoConnectionsException : public Exception {
 public:
     NoConnectionsException() : Exception() {}
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept  {
         return "Attempted to invoke a procedure while there are no connections";
     }
 };
@@ -294,7 +294,7 @@ public:
 class MisplacedClientException : public Exception {
 public:
     MisplacedClientException() : Exception() {}
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept  {
         return "Attempted to return a client that does not belong to this thread";
     }
 };
@@ -312,8 +312,8 @@ public:
     explicit LibEventException(const std::string& msg) : Exception() {
         m_what = "Encountered an error from libevent library. " + msg;
     }
-    virtual ~LibEventException() throw() {}
-    const char* what() const throw() {
+    virtual ~LibEventException() noexcept {}
+    const char* what() const noexcept  {
         return m_what.c_str();
     }
 };
@@ -321,7 +321,7 @@ public:
 class ClusterInstanceMismatchException : public Exception {
 public:
     ClusterInstanceMismatchException() : Exception() {}
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept  {
         return "Attempted to connect a client to two separate VoltDB clusters";
     }
 };
@@ -335,8 +335,8 @@ public:
     explicit UnknownProcedureException(const std::string& name) : Exception() {
         m_what = "Unknown procedure invoked: " + name;
     }
-    virtual ~UnknownProcedureException() throw() {}
-    virtual const char* what() const throw() {
+    virtual ~UnknownProcedureException() noexcept {}
+    virtual const char* what() const noexcept  {
         return m_what.c_str();
     }
 };
@@ -350,8 +350,8 @@ public:
     explicit CoordinateOutOfRangeException(const std::string& name) : Exception() {
         m_what = name + " coordinate out of range.";
     }
-    virtual ~CoordinateOutOfRangeException() throw() {}
-    virtual const char* what() const throw() {
+    virtual ~CoordinateOutOfRangeException() noexcept {}
+    virtual const char* what() const noexcept  {
         return m_what.c_str();
     }
 };
@@ -362,9 +362,9 @@ public:
     explicit PipeCreationException() : Exception() {
         m_what = "Failed to create pipe";
     }
-    virtual ~PipeCreationException() throw() {}
+    virtual ~PipeCreationException() noexcept {}
 
-    virtual  const char* what() const throw() {
+    virtual const char* what() const noexcept  {
         return m_what.c_str();
     }
 };
@@ -380,9 +380,11 @@ public:
         m_msg = "Timer thread exception: " + msg;
     }
 
-    virtual ~TimerThreadException() throw () {}
+    virtual ~TimerThreadException() noexcept {}
 
-    const char* what() const throw () { return m_msg.c_str();}
+    const char* what() const noexcept {
+        return m_msg.c_str();
+    }
 };
 
 
@@ -399,16 +401,18 @@ public:
         m_what = std::string(msg);
     }
 
-    const char* what() const throw () { return m_what.c_str(); }
+    const char* what() const noexcept {
+        return m_what.c_str();
+    }
 
-    ~UninitializedColumnException() throw() {}
+    ~UninitializedColumnException() noexcept {}
 };
 
 class InCompatibleSchemaException : public Exception {
 public:
     explicit InCompatibleSchemaException() : Exception() {}
-    const char* what() const throw() { return "Incompatible schema"; }
-    ~InCompatibleSchemaException() throw() {}
+    const char* what() const noexcept  { return "Incompatible schema"; }
+    ~InCompatibleSchemaException() noexcept {}
 };
 
 
@@ -422,10 +426,10 @@ public:
         m_what = msg;
     }
 
-    virtual ~SSLException() throw() {
+    virtual ~SSLException() noexcept {
     }
 
-    const char* what() const throw() {
+    const char* what() const noexcept  {
         return m_what.c_str();
     }
 
@@ -441,10 +445,10 @@ public:
         m_what = "Encountered error generating hash digest. " + msg;
     }
 
-    virtual ~MDHashException() throw() {
+    virtual ~MDHashException() noexcept {
     }
 
-    const char* what() const throw() {
+    const char* what() const noexcept  {
         return m_what.c_str();
     }
 };
