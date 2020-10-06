@@ -366,20 +366,6 @@ ClientImpl::~ClientImpl() {
         }
         cleanupErrorStrings = true;
     }
-
-    {
-        boost::mutex::scoped_lock lock(m_globalResourceLock);
-        if (--m_numberOfClients == 0) {
-            if (cleanupEvp) {
-                // release global resource allocated for generating digest/hash
-                EVP_cleanup();
-            }
-            if (m_enableSSL) {
-                // unload ssl n crypto error strings
-                ERR_free_strings();
-            }
-        }
-    }
 }
 
 // Initialization for the library that only gets called once
@@ -401,7 +387,7 @@ public:
     explicit CleanupEVP_MD_Ctx(EVP_MD_CTX *ctx) : m_ctx(ctx) { }
     ~CleanupEVP_MD_Ctx() {
         if (m_ctx != NULL) {
-            EVP_MD_CTX_cleanup(m_ctx);
+            EVP_MD_CTX_free(m_ctx);
         }
     }
 private:
@@ -430,16 +416,16 @@ void ClientImpl::hashPassword(const std::string& password)  {
     unsigned int md_len = -1;
     m_passwordHash = (unsigned char *) malloc(hashDataLength);
 
-    EVP_MD_CTX mdctx;
-    EVP_MD_CTX_init(&mdctx);
-    CleanupEVP_MD_Ctx cleanup(&mdctx);
-    if (EVP_DigestInit_ex(&mdctx, md, NULL) == 0) {
+    EVP_MD_CTX *mdctx;
+    mdctx = EVP_MD_CTX_new();
+    CleanupEVP_MD_Ctx cleanup(mdctx);
+    if (EVP_DigestInit_ex(mdctx, md, NULL) == 0) {
         throw MDHashException("Failed to setup the digest");
     }
-    if (EVP_DigestUpdate(&mdctx, password.c_str(), password.size()) == 0) {
+    if (EVP_DigestUpdate(mdctx, password.c_str(), password.size()) == 0) {
         throw MDHashException("Failed to generate digest hash");
     }
-    if (EVP_DigestFinal_ex(&mdctx, m_passwordHash, &md_len) == 0) {
+    if (EVP_DigestFinal_ex(mdctx, m_passwordHash, &md_len) == 0) {
         throw MDHashException("Failed to retrieve the digest");
     }
 }

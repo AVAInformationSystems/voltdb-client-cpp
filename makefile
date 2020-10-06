@@ -15,7 +15,7 @@ LIB_NAME=libvoltdbcpp
 KIT_NAME=voltdb-client-cpp-x86_64-7.1
 
 CFLAGS=-std=c++17 -I$(BOOST_INCLUDES) -Iinclude -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -g3 ${OPTIMIZATION} -fPIC
-SYSTEM_LIBS := -L $(BOOST_LIBS) -lc -lpthread -lrt -levent_openssl -levent_pthreads -lssl -lcrypto -lboost_system -lboost_thread
+SYSTEM_LIBS := -L $(BOOST_LIBS) -lc -lpthread -lrt -lcrypto -lssl -levent_openssl -levent_pthreads -lboost_system -lboost_thread
 
 .PHONEY: all clean test kit
 
@@ -98,7 +98,6 @@ $(KIT_NAME).tar.gz: $(LIB_NAME).a $(LIB_NAME).so
                   include/ClientLogger.h include/Distributer.h include/ElasticHashinator.h \
                   include/MurmurHash3.h include/Geography.hpp include/GeographyPoint.hpp $(KIT_NAME)/include/
 	cp -R include/ttmath/*.h $(KIT_NAME)/include/ttmath/
-	cp include/openssl/*.h $(KIT_NAME)/include/openssl/
 
 	cp -R examples $(KIT_NAME)/
 	cp README.md $(KIT_NAME)/
