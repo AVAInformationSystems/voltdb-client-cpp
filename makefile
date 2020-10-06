@@ -86,8 +86,6 @@ $(KIT_NAME).tar.gz: $(LIB_NAME).a $(LIB_NAME).so
 	@echo 'Building distribution kit'
 	rm -rf $(KIT_NAME)
 	mkdir -p $(KIT_NAME)/include/ttmath
-	mkdir -p $(KIT_NAME)/include/openssl
-	mkdir -p $(KIT_NAME)/$(THIRD_PARTY_DIR)
 
 	cp -R include/ByteBuffer.hpp include/Client.h include/ClientConfig.h \
 		  include/Column.hpp include/ConnectionPool.h include/Decimal.hpp \
@@ -101,7 +99,6 @@ $(KIT_NAME).tar.gz: $(LIB_NAME).a $(LIB_NAME).so
 
 	cp -R examples $(KIT_NAME)/
 	cp README.md $(KIT_NAME)/
-	cp README.thirdparty $(KIT_NAME)/
 	cp $(LIB_NAME).so $(KIT_NAME)/
 	cp $(LIB_NAME).a $(KIT_NAME)/
 
@@ -111,7 +108,7 @@ $(KIT_NAME).tar.gz: $(LIB_NAME).a $(LIB_NAME).so
 
 testbin: $(LIB_NAME).a $(TEST_OBJS)
 	@echo 'Compiling CPPUnit tests'
-	$(CC) $(CFLAGS) $(TEST_OBJS) $(LIB_NAME).a $(THIRD_PARTY_LIBS) $(SYSTEM_LIBS) -lcppunit -o testbin
+	$(CC) $(CFLAGS) $(TEST_OBJS) $(LIB_NAME).a $(SYSTEM_LIBS) -lcppunit -o testbin
 	@echo ' '
 
 test: testbin
@@ -122,7 +119,7 @@ test: testbin
 # Connection pool testing is put separately since for now it requires a local running Volt server
 cptestbin: $(LIB_NAME).a $(CPTEST_OBJS)
 	@echo 'Compiling Connection Pool CPPUnit tests'
-	$(CC) $(CFLAGS) $(CPTEST_OBJS) $(LIB_NAME).a $(THIRD_PARTY_LIBS) $(SYSTEM_LIBS) -lcppunit -o cptestbin
+	$(CC) $(CFLAGS) $(CPTEST_OBJS) $(LIB_NAME).a $(SYSTEM_LIBS) -lcppunit -o cptestbin
 	@echo ' '
 
 cptest: cptestbin
