@@ -8,35 +8,14 @@ OPTIMIZATION=-O3
 endif
 
 CC=clang++
-BOOST_INCLUDES=/usr/local/include
-BOOST_LIBS=/usr/local/lib
+BOOST_INCLUDES=/usr/include
+BOOST_LIBS=/usr/lib/x86_64-linux-gnu
 
 LIB_NAME=libvoltdbcpp
 KIT_NAME=voltdb-client-cpp-x86_64-7.1
 
 CFLAGS=-std=c++17 -I$(BOOST_INCLUDES) -Iinclude -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -g3 ${OPTIMIZATION} -fPIC
-PLATFORM = $(shell uname)
-
-ifeq ($(PLATFORM),Darwin)
-	THIRD_PARTY_DIR := third_party_libs/osx
-	THIRD_PARTY_LIBS := $(THIRD_PARTY_DIR)/libevent.a \
-					$(THIRD_PARTY_DIR)/libevent_openssl.a \
-					$(THIRD_PARTY_DIR)/libevent_pthreads.a \
-					$(THIRD_PARTY_DIR)/libssl.a \
-					$(THIRD_PARTY_DIR)/libcrypto.a
-	SYSTEM_LIBS := -L$(BOOST_LIBS) -lc -lpthread -lboost_system-mt -lboost_thread-mt
-endif
-
-ifeq ($(PLATFORM),Linux)
-	THIRD_PARTY_DIR := third_party_libs/linux
-	THIRD_PARTY_LIBS := $(THIRD_PARTY_DIR)/libevent.a \
-					$(THIRD_PARTY_DIR)/libevent_openssl.a \
-					$(THIRD_PARTY_DIR)/libevent_pthreads.a \
-					$(THIRD_PARTY_DIR)/libssl.a \
-					$(THIRD_PARTY_DIR)/libcrypto.a \
-					-ldl
-	SYSTEM_LIBS := -L $(BOOST_LIBS) -lc -lpthread -lrt -lboost_system -lboost_thread
-endif
+SYSTEM_LIBS := -L $(BOOST_LIBS) -lc -lpthread -lrt -levent_openssl -libevent_pthreads -lssl -lcrypto -lboost_system -lboost_thread
 
 .PHONEY: all clean test kit
 
@@ -97,7 +76,7 @@ $(LIB_NAME).a: $(OBJS)
 
 $(LIB_NAME).so: $(OBJS)
 	@echo 'Building libvoltdbcpp.so shared library'
-	$(CC) -shared -o $@ $? $(THIRD_PARTY_LIBS) $(SYSTEM_LIBS)
+	$(CC) -shared -o $@ $? $(SYSTEM_LIBS)
 	@echo
 
 -include $(OBJS:.o=.d)
