@@ -15,7 +15,7 @@ LIB_NAME=libvoltdbcpp
 KIT_NAME=voltdb-client-cpp-x86_64-7.1
 
 CFLAGS=-std=c++17 -I$(BOOST_INCLUDES) -Iinclude -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -g3 ${OPTIMIZATION} -fPIC
-SYSTEM_LIBS := -L $(BOOST_LIBS) -lc -lpthread -lrt -levent_openssl -libevent_pthreads -lssl -lcrypto -lboost_system -lboost_thread
+SYSTEM_LIBS := -L $(BOOST_LIBS) -lc -lpthread -lrt -levent_openssl -levent_pthreads -lssl -lcrypto -lboost_system -lboost_thread
 
 .PHONEY: all clean test kit
 
