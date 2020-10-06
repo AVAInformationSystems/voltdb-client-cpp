@@ -105,7 +105,6 @@ $(KIT_NAME).tar.gz: $(LIB_NAME).a $(LIB_NAME).so
 	cp README.thirdparty $(KIT_NAME)/
 	cp $(LIB_NAME).so $(KIT_NAME)/
 	cp $(LIB_NAME).a $(KIT_NAME)/
-	cp -pR $(THIRD_PARTY_LIBS) $(KIT_NAME)/$(THIRD_PARTY_DIR)
 
 	tar -czf $(KIT_NAME).tar.gz $(KIT_NAME)
 
